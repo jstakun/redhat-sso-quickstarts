@@ -6,7 +6,6 @@
   "credentials": {
     "secret": "d76f8cb0-c978-48ce-ba5c-a3c8d545b27f"
   },
-  "confidential-port": 0
   "policy-enforcer": {
       "on-deny-redirect-to" : "/app-authz-vanilla/error.jsp"
   } 
