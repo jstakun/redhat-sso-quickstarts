@@ -1,0 +1,11 @@
+{
+  "realm": "default",
+  "auth-server-url": "https://sso.apps.18.213.208.233.nip.io/auth",
+  "ssl-required": "external",
+  "resource": "app-authz-jee-vanilla",
+  "public-client": true,
+  "confidential-port": 0
+  "policy-enforcer": {
+      "on-deny-redirect-to" : "/app-authz-vanilla/error.jsp"
+  } 
+}
