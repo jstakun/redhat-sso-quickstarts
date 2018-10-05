@@ -36,7 +36,7 @@
 
 	<login-config>
 		<auth-method>KEYCLOAK</auth-method>
-		<realm-name>quickstart-authz-vanilla</realm-name>
+		<realm-name>default</realm-name>
 	</login-config>
 
 	<security-role>
