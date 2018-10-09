@@ -19,7 +19,6 @@ package org.keycloak.quickstart.appjee;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -73,8 +72,14 @@ public class ServiceClient {
     public static CloseableHttpClient createHttpClient() {
         //return HttpClients.createDefault();
         //skip ssl certs validation
+        org.apache.http.ssl.SSLContextBuilder sslContextBuilder = SSLContextBuilder.create();
+        sslContextBuilder.loadTrustMaterial(new org.apache.http.conn.ssl.TrustSelfSignedStrategy());
+        SSLContext sslContext = sslContextBuilder.build();
+        org.apache.http.conn.ssl.SSLConnectionSocketFactory sslSocketFactory =
+        new SSLConnectionSocketFactory(sslContext, new org.apache.http.conn.ssl.DefaultHostnameVerifier());
+
         return HttpClients.custom()
-               .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+               .setSSLSocketFactory(sslSocketFactory)
                .build();
     }
 
