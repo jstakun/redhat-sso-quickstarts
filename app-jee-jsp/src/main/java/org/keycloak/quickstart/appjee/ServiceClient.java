@@ -29,9 +29,12 @@ import org.apache.http.conn.ssl.*;
 import org.apache.http.ssl.SSLContextBuilder;
 import javax.net.ssl.*;
 import java.security.*;
+import java.security.cert.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
+import java.io. FileInputStream;
+
 
 /**
  * Client that calls the service.
