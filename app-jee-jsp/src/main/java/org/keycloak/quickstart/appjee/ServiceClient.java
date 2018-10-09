@@ -75,7 +75,7 @@ public class ServiceClient {
         org.apache.http.ssl.SSLContextBuilder sslContextBuilder = org.apache.http.ssl.SSLContextBuilder.create();
         sslContextBuilder.loadTrustMaterial(new org.apache.http.conn.ssl.TrustSelfSignedStrategy());
         org.apache.http.conn.ssl.SSLConnectionSocketFactory sslSocketFactory =
-        new SSLConnectionSocketFactory(sslContextBuilder.build(), new org.apache.http.conn.ssl.DefaultHostnameVerifier());
+        new org.apache.http.conn.ssl.SSLConnectionSocketFactory(sslContextBuilder.build(), new org.apache.http.conn.ssl.DefaultHostnameVerifier());
 
         return HttpClients.custom()
                .setSSLSocketFactory(sslSocketFactory)
