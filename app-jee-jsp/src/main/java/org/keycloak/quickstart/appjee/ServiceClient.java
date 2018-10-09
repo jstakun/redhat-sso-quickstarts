@@ -70,16 +70,19 @@ public class ServiceClient {
     }
 
     public static CloseableHttpClient createHttpClient() {
-        //return HttpClients.createDefault();
-        //skip ssl certs validation
-        org.apache.http.ssl.SSLContextBuilder sslContextBuilder = org.apache.http.ssl.SSLContextBuilder.create();
-        sslContextBuilder.loadTrustMaterial(new org.apache.http.conn.ssl.TrustSelfSignedStrategy());
-        org.apache.http.conn.ssl.SSLConnectionSocketFactory sslSocketFactory =
-        new org.apache.http.conn.ssl.SSLConnectionSocketFactory(sslContextBuilder.build(), new org.apache.http.conn.ssl.DefaultHostnameVerifier());
+        try {
+            //skip ssl certs validation
+            org.apache.http.ssl.SSLContextBuilder sslContextBuilder = org.apache.http.ssl.SSLContextBuilder.create();
+            sslContextBuilder.loadTrustMaterial(new org.apache.http.conn.ssl.TrustSelfSignedStrategy());
+            org.apache.http.conn.ssl.SSLConnectionSocketFactory sslSocketFactory =
+            new org.apache.http.conn.ssl.SSLConnectionSocketFactory(sslContextBuilder.build(), new org.apache.http.conn.ssl.DefaultHostnameVerifier());
 
-        return HttpClients.custom()
+            return HttpClients.custom()
                .setSSLSocketFactory(sslSocketFactory)
                .build();
+        } catch (Exception e) {
+            return HttpClients.createDefault();
+        }
     }
 
     public static String callService(HttpServletRequest req, KeycloakSecurityContext session, String action) throws Failure {
