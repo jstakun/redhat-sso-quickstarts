@@ -79,7 +79,7 @@ public class ServiceClient {
             final String keyStorePassword = "manager1!"; 
             KeyStore trustStore = KeyStoreLoader.loadKeyStore("/var/run/secrets/java.io/keystores/sso-keystore.jks", keyStorePassword);
             // use the TrustSelfSignedStrategy to allow Self Signed Certificates
-            SSLContext sslContext = SSLContextBuilder
+            SSLContext sslContext = SSLContexts
                 .custom()
                 .useSSL()
                 //.loadTrustMaterial(trustStore, new TrustStrategy() {
