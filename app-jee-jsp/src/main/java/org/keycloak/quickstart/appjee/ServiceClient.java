@@ -95,7 +95,7 @@ public class ServiceClient {
                 .setSSLSocketFactory(connectionFactory)
                 .build();
         } catch (Exception e) {
-            throw new Exception("Unable to init http client!");
+            throw new RuntimeException("Unable to init http client!", e);
         }
     }
 
