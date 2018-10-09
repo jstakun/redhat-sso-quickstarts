@@ -72,11 +72,10 @@ public class ServiceClient {
     public static CloseableHttpClient createHttpClient() {
         //return HttpClients.createDefault();
         //skip ssl certs validation
-        org.apache.http.ssl.SSLContextBuilder sslContextBuilder = SSLContextBuilder.create();
+        org.apache.http.ssl.SSLContextBuilder sslContextBuilder = org.apache.http.ssl.SSLContextBuilder.create();
         sslContextBuilder.loadTrustMaterial(new org.apache.http.conn.ssl.TrustSelfSignedStrategy());
-        SSLContext sslContext = sslContextBuilder.build();
         org.apache.http.conn.ssl.SSLConnectionSocketFactory sslSocketFactory =
-        new SSLConnectionSocketFactory(sslContext, new org.apache.http.conn.ssl.DefaultHostnameVerifier());
+        new SSLConnectionSocketFactory(sslContextBuilder.build(), new org.apache.http.conn.ssl.DefaultHostnameVerifier());
 
         return HttpClients.custom()
                .setSSLSocketFactory(sslSocketFactory)
