@@ -28,6 +28,7 @@ import org.keycloak.util.JsonSerialization;
 import org.apache.http.conn.ssl.*;
 import org.apache.http.ssl.SSLContextBuilder;
 import javax.net.ssl.*;
+import java.security.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
