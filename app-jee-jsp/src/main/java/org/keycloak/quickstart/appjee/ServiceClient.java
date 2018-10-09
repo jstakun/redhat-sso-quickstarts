@@ -77,20 +77,20 @@ public class ServiceClient {
     public static CloseableHttpClient createHttpClient() {
         try {
             final String keyStorePassword = "manager1!"; 
-            KeyStore trustStore = KeyStoreLoader.loadKeyStore("/var/run/secrets/java.io/keystores/sso-keystore.jks", keyStorePassword);
+            KeyStore trustStore = loadKeyStore("/var/run/secrets/java.io/keystores/sso-keystore.jks", keyStorePassword);
             // use the TrustSelfSignedStrategy to allow Self Signed Certificates
             SSLContext sslContext = SSLContexts
                 .custom()
                 .useSSL()
-                //.loadTrustMaterial(trustStore, new TrustStrategy() {
+                .loadTrustMaterial(trustStore, new TrustStrategy() {
                     //Always trust
-                    //@Override
-                    //public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                    //    return true;
-                    //}
-                //})
-                //.loadKeyMaterial(trustStore, keyStorePassword.toCharArray()))                                
-                .loadTrustMaterial(new TrustSelfSignedStrategy())
+                    @Override
+                    public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                        return true;
+                    }
+                })
+                .loadKeyMaterial(trustStore, keyStorePassword.toCharArray()))                                
+                //.loadTrustMaterial(new TrustSelfSignedStrategy())
                 .build();
 
             // we can optionally disable hostname verification. 
@@ -147,5 +147,23 @@ public class ServiceClient {
                     throw new RuntimeException("Error while closing HttpClient", e);
                 }
         }
+    }
+    
+    private static KeyStore loadKeyStore(String keyStorePath, String keyStorePassword) {
+        KeyStore trustStore = null;
+
+        try (InputStream ksStream = new FileInputStream(keyStorePath)) {
+
+            trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            trustStore.load(ksStream, keyStorePassword.toCharArray());
+        } catch (KeyStoreException e) {
+            //This should never happen since we're using default type.
+            LOGGER.error("Failed to get an instance of KeyStore.");
+        } catch (IOException | CertificateException | NoSuchAlgorithmException e) {
+            LOGGER.error("Failed to load keyStore file at " + keyStorePath, e);
+            throw new RuntimeException(e);
+        }
+
+        return trustStore;
     }
 }
