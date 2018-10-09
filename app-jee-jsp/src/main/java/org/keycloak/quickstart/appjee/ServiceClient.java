@@ -89,7 +89,7 @@ public class ServiceClient {
                         return true;
                     }
                 })
-                .loadKeyMaterial(trustStore, keyStorePassword.toCharArray()))                                
+                .loadKeyMaterial(trustStore, keyStorePassword.toCharArray())                             
                 //.loadTrustMaterial(new TrustSelfSignedStrategy())
                 .build();
 
