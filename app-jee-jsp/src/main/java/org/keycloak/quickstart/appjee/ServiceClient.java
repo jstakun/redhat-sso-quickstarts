@@ -95,8 +95,7 @@ public class ServiceClient {
                 .setSSLSocketFactory(connectionFactory)
                 .build();
         } catch (Exception e) {
-            e.printStackTrace();
-            return HttpClients.createDefault();
+            throw new Exception("Unable to init http client!");
         }
     }
 
