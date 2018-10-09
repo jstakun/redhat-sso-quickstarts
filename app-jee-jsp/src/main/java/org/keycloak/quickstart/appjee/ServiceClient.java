@@ -25,6 +25,10 @@ import org.apache.http.impl.client.HttpClients;
 import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.util.JsonSerialization;
 
+import org.apache.http.conn.ssl.*;
+import org.apache.http.ssl.SSLContextBuilder;
+import javax.net.ssl.*;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 
@@ -71,16 +75,27 @@ public class ServiceClient {
 
     public static CloseableHttpClient createHttpClient() {
         try {
-            //skip ssl certs validation
-            org.apache.http.ssl.SSLContextBuilder sslContextBuilder = org.apache.http.ssl.SSLContextBuilder.create();
-            sslContextBuilder.loadTrustMaterial(new org.apache.http.conn.ssl.TrustSelfSignedStrategy());
-            org.apache.http.conn.ssl.SSLConnectionSocketFactory sslSocketFactory =
-            new org.apache.http.conn.ssl.SSLConnectionSocketFactory(sslContextBuilder.build(), new org.apache.http.conn.ssl.DefaultHostnameVerifier());
+            // use the TrustSelfSignedStrategy to allow Self Signed Certificates
+            SSLContext sslContext = SSLContextBuilder
+                .create()
+                .loadTrustMaterial(new TrustSelfSignedStrategy())
+                .build();
 
-            return HttpClients.custom()
-               .setSSLSocketFactory(sslSocketFactory)
-               .build();
+            // we can optionally disable hostname verification. 
+            // if you don't want to further weaken the security, you don't have to include this.
+            HostnameVerifier allowAllHosts = new NoopHostnameVerifier();
+        
+            // create an SSL Socket Factory to use the SSLContext with the trust self signed certificate strategy
+            // and allow all hosts verifier.
+            SSLConnectionSocketFactory connectionFactory = new SSLConnectionSocketFactory(sslContext, allowAllHosts);
+        
+            // finally create the HttpClient using HttpClient factory methods and assign the ssl socket factory
+            return HttpClients
+                .custom()
+                .setSSLSocketFactory(connectionFactory)
+                .build();
         } catch (Exception e) {
+            e.printStackTrace();
             return HttpClients.createDefault();
         }
     }
