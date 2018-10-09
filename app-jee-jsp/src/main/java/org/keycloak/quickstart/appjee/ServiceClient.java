@@ -152,16 +152,12 @@ public class ServiceClient {
     private static KeyStore loadKeyStore(String keyStorePath, String keyStorePassword) {
         KeyStore trustStore = null;
 
-        try (InputStream ksStream = new FileInputStream(keyStorePath)) {
-
+        try {
+            InputStream ksStream = new FileInputStream(keyStorePath);
             trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
             trustStore.load(ksStream, keyStorePassword.toCharArray());
-        } catch (KeyStoreException e) {
-            //This should never happen since we're using default type.
-            LOGGER.error("Failed to get an instance of KeyStore.");
-        } catch (IOException | CertificateException | NoSuchAlgorithmException e) {
-            LOGGER.error("Failed to load keyStore file at " + keyStorePath, e);
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load keyStore file at " + keyStorePath, e);
         }
 
         return trustStore;
