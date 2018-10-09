@@ -75,10 +75,12 @@ public class ServiceClient {
 
     public static CloseableHttpClient createHttpClient() {
         try {
+            KeyStore trustStore = KeyStoreLoader.loadKeyStore("/var/run/secrets/java.io/keystores/sso-keystore.jks", "manager1!");
             // use the TrustSelfSignedStrategy to allow Self Signed Certificates
             SSLContext sslContext = SSLContextBuilder
                 .create()
-                .loadTrustMaterial(new TrustSelfSignedStrategy())
+                .loadTrustMaterial(trustStore)                                
+                //.loadTrustMaterial(new TrustSelfSignedStrategy())
                 .build();
 
             // we can optionally disable hostname verification. 
